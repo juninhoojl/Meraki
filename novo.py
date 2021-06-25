@@ -4,6 +4,7 @@ import requests
 from requests import Session
 import json
 
+# Rescrevendo o rebuild ocm pass para autenticar so quando for instaciado
 class NoRebuildAuthSession(Session):
     def rebuild_auth(self, prepared_request, response):
         pass
@@ -15,17 +16,17 @@ class MerakiAPI:
         self.__payload = None
         self.__headers = {'Authorization': f'Bearer {chave}', "Content-Type": "application/json", "Accept": "application/json"}
 
-    def requesicao(self, url): # Adicionar o exception
+    def requesicao(self, url):
         try:
             return self.__sessao.get(self.__baseURL+url, headers=self.__headers, data=self.__payload, timeout=5).json()
         except:
             return 'Erro'
 
-    def putrequest(self, url, payload): # Adicionar o exception
-        return self.__sessao.put(self.__baseURL+url, headers=self.__headers, data=payload, timeout=10).json()
-
-    def postrequest(self, url, payload): # Adicionar o exception
-        return self.__sessao.post(self.__baseURL+url, headers=self.__headers, data=json.dumps(payload), timeout=5).json()
+    def postrequest(self, url, payload):
+        try:
+            return self.__sessao.post(self.__baseURL+url, headers=self.__headers, data=json.dumps(payload), timeout=5).json()
+        except:
+            return 'Erro'
 
     def getOrganizacoes(self):
         return self.requesicao("/organizations/")
@@ -72,6 +73,10 @@ class MerakiAPI:
     def createObject(self, id_organizacao, payload):
         return self.postrequest("/organizations/{}/policyObjects".format(id_organizacao), payload)
 
+    def getOrgPolicies(self, id_organizacao):
+        return self.requesicao("/organizations/{}/brandingPolicies".format(id_organizacao))
+
+
 def printa(jsonDado):
     print(json.dumps(jsonDado, indent=4, sort_keys=True))
 
@@ -81,6 +86,10 @@ if __name__ == '__main__':
     meraki = MerakiAPI(os.environ.get("CHAVEREAL"))
     payload = {"name": "TESTE2", "category": "network", "type": "cidr", "cidr":"10.0.0.0/24","groupIds":[]}
     organizacao = '739153288842183396'
+    rede = 'L_739153288842210664'
     #printa(meraki.getPolicyObjects(organizacao))
-    printa(meraki.createObject(organizacao, payload))
+    #printa(meraki.createObject(organizacao, payload))
     #printa(meraki.getOrganizacao(organizacao))
+    #printa(meraki.getRedes(organizacao))
+    printa(meraki.getOrgPolicies(organizacao))
+    #printa(meraki.getGroupPolicies(rede))
