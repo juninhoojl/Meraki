@@ -73,8 +73,13 @@ class MerakiAPI:
     def createObject(self, id_organizacao, payload):
         return self.postrequest("/organizations/{}/policyObjects".format(id_organizacao), payload)
 
-    def getOrgPolicies(self, id_organizacao):
-        return self.requesicao("/organizations/{}/brandingPolicies".format(id_organizacao))
+    # Lista grupos de objetos existentes
+    def getPolicyObjGroup(self, id_organizacao):
+        return self.requesicao("/organizations/{}/policyObjects/groups".format(id_organizacao))
+
+    # Cria novo grupo
+    def postPolicyObjGroup(self, id_organizacao, payload):
+        return self.postrequest("/organizations/{}/policyObjects/groups".format(id_organizacao), payload)
 
 
 def printa(jsonDado):
@@ -84,12 +89,19 @@ if __name__ == '__main__':
 
     load_dotenv()
     meraki = MerakiAPI(os.environ.get("CHAVEREAL"))
-    payload = {"name": "TESTE2", "category": "network", "type": "cidr", "cidr":"10.0.0.0/24","groupIds":[]}
+    payload_cidr = {"name": "TESTE2", "category": "network", "type": "cidr", "cidr":"10.0.0.0/24","groupIds":[]}
+    payload_fqdn = {"name": "Teste URL", "category": "network", "type": "fqdn", "fqdn":"google.com","groupIds":[]}
+    listaObjs = ['739153288842184442', '739153288842184437']
+    payload_grupo = {"name": "Grupo via API", "category": "NetworkObjectGroup", "objectIds": listaObjs}
+    
     organizacao = '739153288842183396'
     rede = 'L_739153288842210664'
+    id_grupo_criado = '739153288842182896'
     #printa(meraki.getPolicyObjects(organizacao))
-    #printa(meraki.createObject(organizacao, payload))
+    #printa(meraki.postPolicyObjGroup(organizacao, payload_grupo))
+
+    #printa(meraki.createObject(organizacao, payload_ip))
     #printa(meraki.getOrganizacao(organizacao))
     #printa(meraki.getRedes(organizacao))
-    printa(meraki.getOrgPolicies(organizacao))
+    #printa(meraki.getPolicyObjGroup(organizacao))
     #printa(meraki.getGroupPolicies(rede))
