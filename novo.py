@@ -6,8 +6,14 @@ import json
 
 # Rescrevendo o rebuild ocm pass para autenticar so quando for instaciado
 class NoRebuildAuthSession(Session):
+
+    #Lembrar para usar ele se quiser super.rebuild_auth(self, prepared_request, response):
     def rebuild_auth(self, prepared_request, response):
         pass
+
+    # RASCUNHOOOO
+    def reauth(self, prepared_request, response):
+        super.rebuild_auth(self, prepared_request, response)
 
 class MerakiAPI:
     def __init__(self, chave):
