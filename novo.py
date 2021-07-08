@@ -94,7 +94,8 @@ def printa(jsonDado):
 if __name__ == '__main__':
 
     load_dotenv()
-    meraki = MerakiAPI(os.environ.get("CHAVEREAL"))
+    meraki = MerakiAPI(os.environ.get("APIKEY"))
+
     payload_cidr = {"name": "TESTE2", "category": "network", "type": "cidr", "cidr":"10.0.0.0/24","groupIds":[]}
     payload_fqdn = {"name": "Teste URL", "category": "network", "type": "fqdn", "fqdn":"google.com","groupIds":[]}
     listaObjs = ['739153288842184442', '739153288842184437']
@@ -103,7 +104,7 @@ if __name__ == '__main__':
     organizacao = '739153288842183396'
     rede = 'L_739153288842210664'
     id_grupo_criado = '739153288842182896'
-    #printa(meraki.getPolicyObjects(organizacao))
+    printa(meraki.getPolicyObjects(organizacao))
     #printa(meraki.postPolicyObjGroup(organizacao, payload_grupo))
 
     #printa(meraki.createObject(organizacao, payload_ip))
